@@ -55,6 +55,19 @@
 
     <TITLE>David McGill Technologies</TITLE>
     <meta name=viewport content="width=device-width, initial-scale=1">
+    <style>
+      .sr-only {
+        position: absolute;
+        left: -10000px;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+      }
+      .ob-phone {
+        unicode-bidi: bidi-override;
+        direction: rtl;
+      }
+    </style>
 </HEAD>
 
 <BODY BGCOLOR="#E6E6FA" TEXT="#000000">
@@ -71,7 +84,8 @@
     
 
     <p>Specializing in freelance and consulting opportunities for local and national small businesses including restaurants, non-profits, and insurance companies.</p>
-    <p>(405) 633-3283</p>
+    <!-- Phone number obfuscated for simple scraping but still accessible -->
+    <p class="phone-number"><span class="sr-only">(405) 555-9876</span><span aria-hidden="true" class="ob-phone">6789-555 )504(</span></p>
     <p>dmcgill50 at gmail dot com</p>
 
 
