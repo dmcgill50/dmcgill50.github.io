@@ -1,0 +1,10 @@
+{
+  "name": "dmcgill50-website",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "jekyll build && playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.42.1"
+  }
+}

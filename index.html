@@ -72,40 +72,79 @@
 
 <BODY BGCOLOR="#E6E6FA" TEXT="#000000">
 
+=======
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>David McGill Technologies</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65945589-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-65945589-1');
+  </script>
+  <script src="https://www.paypalobjects.com/api/checkout.js"></script>
+</head>
+<body>
+  <div class="container">
     <h1>Welcome to David McGill Technologies</h1>
-
-    <h1>
-        <a href="pics.html"><img border="0" src="images/dam-bw - small.jpg"></a><br>
-    </h1>
-    <h4>
-        David McGill - Owner
-    </h4>
-
-    
-
-    <p>Specializing in freelance and consulting opportunities for local and national small businesses including restaurants, non-profits, and insurance companies.</p>
-    <!-- Phone number obfuscated for simple scraping but still accessible -->
+    <a href="pics.html"><img src="images/dam-bw - small.jpg" alt="David McGill"></a>
+    <h4>David McGill - Owner</h4>
+    <p>Specializing in freelance and consulting opportunities for local and national small businesses including restaurants, non-profits, and insurance companies.</p>    <!-- Phone number obfuscated for simple scraping but still accessible -->
     <p class="phone-number"><span class="sr-only">(405) 555-9876</span><span aria-hidden="true" class="ob-phone">6789-555 )504(</span></p>
     <p>dmcgill50 at gmail dot com</p>
 
+    <div id="paypal-button"></div>
+  </div>
 
-<!-- Drip -->
-<script type="text/javascript">
-  var _dcq = _dcq || [];
-  var _dcs = _dcs || {}; 
-  _dcs.account = '1380181';
-  
-  (function() {
-    var dc = document.createElement('script');
-    dc.type = 'text/javascript'; dc.async = true; 
-    dc.src = '//tag.getdrip.com/1380181.js';
-    var s = document.getElementsByTagName('script')[0];
-    s.parentNode.insertBefore(dc, s);
-  })();
-</script>
+  <!-- Drip -->
+  <script type="text/javascript">
+    var _dcq = _dcq || [];
+    var _dcs = _dcs || {};
+    _dcs.account = '1380181';
 
-<div id="paypal-button"></div>
+    (function() {
+      var dc = document.createElement('script');
+      dc.type = 'text/javascript'; dc.async = true;
+      dc.src = '//tag.getdrip.com/1380181.js';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(dc, s);
+    })();
 
-</BODY>
-
-</HTML>
+    paypal.Button.render({
+      env: 'sandbox',
+      client: {
+        sandbox: 'demo_sandbox_client_id',
+        production: 'demo_production_client_id'
+      },
+      locale: 'en_US',
+      style: {
+        size: 'small',
+        color: 'gold',
+        shape: 'pill'
+      },
+      commit: true,
+      payment: function(data, actions) {
+        return actions.payment.create({
+          transactions: [{
+            amount: {
+              total: '0.01',
+              currency: 'USD'
+            }
+          }]
+        });
+      },
+      onAuthorize: function(data, actions) {
+        return actions.payment.execute().then(function() {
+          window.alert('Thank you for your purchase!');
+        });
+      }
+    }, '#paypal-button');
+  </script>
+</body>
+</html>
