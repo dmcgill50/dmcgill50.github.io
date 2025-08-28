@@ -34,3 +34,21 @@ img {
     unicode-bidi: bidi-override;
     direction: rtl;
 }
+
+.whatsapp-button {
+    display: inline-block;
+    background-color: #25D366;
+    color: white;
+    padding: 12px 20px;
+    text-decoration: none;
+    border-radius: 25px;
+    font-weight: bold;
+    margin: 10px 0;
+    transition: background-color 0.3s ease;
+}
+
+.whatsapp-button:hover {
+    background-color: #20BD5A;
+    text-decoration: none;
+    color: white;
+}
