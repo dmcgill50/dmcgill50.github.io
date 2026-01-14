@@ -213,7 +213,10 @@
 
     // Initialize Google Maps
     async function initAutocomplete() {
-      await customElements.whenDefined('gmp-place-autocomplete');
+      console.log('initAutocomplete called');
+      try {
+        await customElements.whenDefined('gmp-place-autocomplete');
+        console.log('gmp-place-autocomplete defined');
 
       const placeAutocomplete = document.getElementById('customer-address');
       console.log('Autocomplete element found:', placeAutocomplete);
@@ -227,6 +230,9 @@
           calculateTravelDistance(place.formattedAddress);
         }
       });
+      } catch (e) {
+        console.error('Error in initAutocomplete:', e);
+      }
     }
 
     // Calculate travel distance using Distance Matrix API
