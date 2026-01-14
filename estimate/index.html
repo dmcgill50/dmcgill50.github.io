@@ -221,16 +221,9 @@
       const placeAutocomplete = document.getElementById('customer-address');
       console.log('Autocomplete element found:', placeAutocomplete);
 
-      // Try multiple event names
-      ['gmp-placeselect', 'gmp-select', 'place_changed', 'change', 'input'].forEach(eventName => {
-        placeAutocomplete.addEventListener(eventName, (event) => {
-          console.log(`Event "${eventName}" fired:`, event);
-        });
-      });
-
-      placeAutocomplete.addEventListener('gmp-placeselect', async (event) => {
+      placeAutocomplete.addEventListener('gmp-select', async ({ placePrediction }) => {
         console.log('Place selected event fired');
-        const place = event.place;
+        const place = placePrediction.toPlace();
         await place.fetchFields({ fields: ['formattedAddress'] });
         console.log('Formatted address:', place.formattedAddress);
         if (place.formattedAddress) {
