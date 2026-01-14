@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Carpet Cleaning Estimate - McGill Technologies</title>
+  <link rel="stylesheet" href="../style.css">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65945589-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-65945589-1');
+  </script>
+  <style>
+    .estimator-form {
+      text-align: left;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    .form-group label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 0.25rem;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 0.5rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    .form-row {
+      display: flex;
+      gap: 1rem;
+    }
+    .form-row .form-group {
+      flex: 1;
+    }
+    .section-title {
+      font-size: 1.1rem;
+      margin-top: 1.5rem;
+      margin-bottom: 0.5rem;
+      padding-bottom: 0.25rem;
+      border-bottom: 2px solid #7B68EE;
+    }
+    .calculate-btn {
+      background-color: #7B68EE;
+      color: white;
+      padding: 12px 24px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 1rem;
+      transition: background-color 0.3s ease;
+    }
+    .calculate-btn:hover {
+      background-color: #6A5ACD;
+    }
+    .calculate-btn:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+    .results {
+      background-color: white;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      display: none;
+    }
+    .results.visible {
+      display: block;
+    }
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #eee;
+    }
+    .result-row:last-child {
+      border-bottom: none;
+    }
+    .result-row.total {
+      font-weight: bold;
+      font-size: 1.2rem;
+      border-top: 2px solid #7B68EE;
+      margin-top: 0.5rem;
+      padding-top: 1rem;
+    }
+    .travel-info {
+      background-color: #f0f0f0;
+      padding: 0.75rem;
+      border-radius: 4px;
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 1rem;
+      color: #7B68EE;
+      text-decoration: none;
+    }
+    .back-link:hover {
+      text-decoration: underline;
+    }
+    .error-message {
+      color: #d32f2f;
+      background-color: #ffebee;
+      padding: 0.75rem;
+      border-radius: 4px;
+      margin-top: 1rem;
+      display: none;
+    }
+    .error-message.visible {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="../" class="back-link">&larr; Back to Home</a>
+    <h1>Carpet Cleaning Estimate</h1>
+    <p>Get an instant estimate for your carpet cleaning service</p>
+
+    <div class="estimator-form">
+      <div class="section-title">Customer Location</div>
+
+      <div class="form-group">
+        <label for="customer-address">Customer Address</label>
+        <input type="text" id="customer-address" placeholder="Enter customer address">
+      </div>
+
+      <div class="form-group">
+        <label for="square-footage">Home Square Footage</label>
+        <input type="number" id="square-footage" placeholder="e.g., 1500" min="0">
+      </div>
+
+      <div class="section-title">Travel Costs</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="gas-price">Gas Price ($/gallon)</label>
+          <input type="number" id="gas-price" value="3.00" step="0.01" min="0">
+        </div>
+        <div class="form-group">
+          <label for="van-mpg">Van MPG</label>
+          <input type="number" id="van-mpg" value="15" step="0.1" min="1">
+        </div>
+      </div>
+
+      <div id="travel-info" class="travel-info" style="display: none;">
+        <strong>Travel Details:</strong>
+        <div id="travel-details"></div>
+      </div>
+
+      <div class="section-title">Room Details</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="num-rooms">Number of Rooms</label>
+          <input type="number" id="num-rooms" value="0" min="0">
+        </div>
+        <div class="form-group">
+          <label for="num-stairs">Number of Stairs</label>
+          <input type="number" id="num-stairs" value="0" min="0">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="num-hallways">Hallways/Entry Ways</label>
+          <input type="number" id="num-hallways" value="0" min="0">
+        </div>
+        <div class="form-group">
+          <label for="num-dining">Dining Rooms/Dens</label>
+          <input type="number" id="num-dining" value="0" min="0">
+        </div>
+      </div>
+
+      <button type="button" class="calculate-btn" id="calculate-btn">Calculate Estimate</button>
+
+      <div id="error-message" class="error-message"></div>
+
+      <div id="results" class="results">
+        <h3 style="margin-top: 0; text-align: center;">Estimate Breakdown</h3>
+        <div id="results-content"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Configuration
+    const CONFIG = {
+      businessAddress: '2202 South 11th Street, Chickasha, OK 73018',
+      pricing: {
+        perSquareFoot: 0.25,
+        perRoom: 35,
+        perStair: 10,
+        perHallway: 20,
+        perDiningRoom: 45
+      }
+    };
+
+    // State
+    let travelData = null;
+
+    // Initialize Google Maps
+    function initAutocomplete() {
+      const addressInput = document.getElementById('customer-address');
+      const autocomplete = new google.maps.places.Autocomplete(addressInput, {
+        types: ['address'],
+        componentRestrictions: { country: 'us' }
+      });
+
+      autocomplete.addListener('place_changed', function() {
+        const place = autocomplete.getPlace();
+        if (place.formatted_address) {
+          calculateTravelDistance(place.formatted_address);
+        }
+      });
+    }
+
+    // Calculate travel distance using Distance Matrix API
+    function calculateTravelDistance(destination) {
+      const service = new google.maps.DistanceMatrixService();
+
+      service.getDistanceMatrix({
+        origins: [CONFIG.businessAddress],
+        destinations: [destination],
+        travelMode: google.maps.TravelMode.DRIVING,
+        unitSystem: google.maps.UnitSystem.IMPERIAL
+      }, function(response, status) {
+        if (status === 'OK' && response.rows[0].elements[0].status === 'OK') {
+          const element = response.rows[0].elements[0];
+          travelData = {
+            distance: element.distance.text,
+            distanceMiles: element.distance.value / 1609.34, // Convert meters to miles
+            duration: element.duration.text
+          };
+
+          document.getElementById('travel-info').style.display = 'block';
+          document.getElementById('travel-details').innerHTML =
+            `Distance: ${travelData.distance} | Estimated travel time: ${travelData.duration}`;
+        } else {
+          travelData = null;
+          document.getElementById('travel-info').style.display = 'none';
+          showError('Could not calculate travel distance. Please check the address.');
+        }
+      });
+    }
+
+    // Calculate the estimate
+    function calculateEstimate() {
+      hideError();
+
+      const squareFootage = parseFloat(document.getElementById('square-footage').value) || 0;
+      const gasPrice = parseFloat(document.getElementById('gas-price').value) || 0;
+      const vanMpg = parseFloat(document.getElementById('van-mpg').value) || 15;
+      const numRooms = parseInt(document.getElementById('num-rooms').value) || 0;
+      const numStairs = parseInt(document.getElementById('num-stairs').value) || 0;
+      const numHallways = parseInt(document.getElementById('num-hallways').value) || 0;
+      const numDining = parseInt(document.getElementById('num-dining').value) || 0;
+
+      // Validation
+      if (squareFootage <= 0) {
+        showError('Please enter the home square footage.');
+        return;
+      }
+
+      // Calculate costs
+      const sqftCost = squareFootage * CONFIG.pricing.perSquareFoot;
+      const roomsCost = numRooms * CONFIG.pricing.perRoom;
+      const stairsCost = numStairs * CONFIG.pricing.perStair;
+      const hallwaysCost = numHallways * CONFIG.pricing.perHallway;
+      const diningCost = numDining * CONFIG.pricing.perDiningRoom;
+
+      // Calculate travel cost (round trip)
+      let travelCost = 0;
+      let travelMiles = 0;
+      if (travelData && travelData.distanceMiles) {
+        travelMiles = travelData.distanceMiles * 2; // Round trip
+        const gallonsNeeded = travelMiles / vanMpg;
+        travelCost = gallonsNeeded * gasPrice;
+      }
+
+      const cleaningSubtotal = sqftCost + roomsCost + stairsCost + hallwaysCost + diningCost;
+      const total = cleaningSubtotal + travelCost;
+
+      // Display results
+      let resultsHTML = '';
+
+      resultsHTML += `<div class="result-row"><span>Square Footage (${squareFootage} sq ft @ $${CONFIG.pricing.perSquareFoot}/sq ft)</span><span>$${sqftCost.toFixed(2)}</span></div>`;
+
+      if (numRooms > 0) {
+        resultsHTML += `<div class="result-row"><span>Rooms (${numRooms} @ $${CONFIG.pricing.perRoom}/room)</span><span>$${roomsCost.toFixed(2)}</span></div>`;
+      }
+
+      if (numStairs > 0) {
+        resultsHTML += `<div class="result-row"><span>Stairs (${numStairs} @ $${CONFIG.pricing.perStair}/stair)</span><span>$${stairsCost.toFixed(2)}</span></div>`;
+      }
+
+      if (numHallways > 0) {
+        resultsHTML += `<div class="result-row"><span>Hallways/Entry Ways (${numHallways} @ $${CONFIG.pricing.perHallway}/area)</span><span>$${hallwaysCost.toFixed(2)}</span></div>`;
+      }
+
+      if (numDining > 0) {
+        resultsHTML += `<div class="result-row"><span>Dining Rooms/Dens (${numDining} @ $${CONFIG.pricing.perDiningRoom}/room)</span><span>$${diningCost.toFixed(2)}</span></div>`;
+      }
+
+      if (travelCost > 0) {
+        resultsHTML += `<div class="result-row"><span>Travel Cost (${travelMiles.toFixed(1)} miles round trip)</span><span>$${travelCost.toFixed(2)}</span></div>`;
+      }
+
+      resultsHTML += `<div class="result-row total"><span>Total Estimate</span><span>$${total.toFixed(2)}</span></div>`;
+
+      document.getElementById('results-content').innerHTML = resultsHTML;
+      document.getElementById('results').classList.add('visible');
+    }
+
+    function showError(message) {
+      const errorEl = document.getElementById('error-message');
+      errorEl.textContent = message;
+      errorEl.classList.add('visible');
+    }
+
+    function hideError() {
+      document.getElementById('error-message').classList.remove('visible');
+    }
+
+    // Event listeners
+    document.getElementById('calculate-btn').addEventListener('click', calculateEstimate);
+
+    // Allow Enter key to trigger calculation
+    document.querySelectorAll('input').forEach(input => {
+      input.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          calculateEstimate();
+        }
+      });
+    });
+  </script>
+
+  <!-- Google Maps API -->
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD8gHF_6vNDqKgPpuwoiEoiI6ZlLUHznR0&libraries=places&callback=initAutocomplete">
+  </script>
+</body>
+</html>
