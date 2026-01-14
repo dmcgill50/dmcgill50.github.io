@@ -216,9 +216,13 @@
       await customElements.whenDefined('gmp-place-autocomplete');
 
       const placeAutocomplete = document.getElementById('customer-address');
+      console.log('Autocomplete element found:', placeAutocomplete);
+
       placeAutocomplete.addEventListener('gmp-placeselect', async (event) => {
+        console.log('Place selected event fired');
         const place = event.place;
         await place.fetchFields({ fields: ['formattedAddress'] });
+        console.log('Formatted address:', place.formattedAddress);
         if (place.formattedAddress) {
           calculateTravelDistance(place.formattedAddress);
         }
@@ -227,6 +231,7 @@
 
     // Calculate travel distance using Distance Matrix API
     function calculateTravelDistance(destination) {
+      console.log('Calculating distance to:', destination);
       const service = new google.maps.DistanceMatrixService();
 
       service.getDistanceMatrix({
@@ -235,6 +240,7 @@
         travelMode: google.maps.TravelMode.DRIVING,
         unitSystem: google.maps.UnitSystem.IMPERIAL
       }, function(response, status) {
+        console.log('Distance Matrix response:', status, response);
         if (status === 'OK' && response.rows[0].elements[0].status === 'OK') {
           const element = response.rows[0].elements[0];
           travelData = {
