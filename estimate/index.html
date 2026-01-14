@@ -13,18 +13,41 @@
     gtag('config', 'UA-65945589-1');
   </script>
   <style>
+    .page-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    .page-header h1 {
+      margin-bottom: 0.5rem;
+    }
+    .page-header p {
+      margin: 0;
+      color: #666;
+    }
+    .estimator-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
     .estimator-form {
       text-align: left;
-      max-width: 500px;
-      margin: 0 auto;
+    }
+    .form-columns {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .form-section {
+      flex: 1;
     }
     .form-group {
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem;
     }
     .form-group label {
       display: block;
       font-weight: bold;
       margin-bottom: 0.25rem;
+      font-size: 0.9rem;
     }
     .form-group input {
       width: 100%;
@@ -36,14 +59,14 @@
     }
     .form-row {
       display: flex;
-      gap: 1rem;
+      gap: 0.75rem;
     }
     .form-row .form-group {
       flex: 1;
     }
     .section-title {
-      font-size: 1.1rem;
-      margin-top: 1.5rem;
+      font-size: 1rem;
+      margin-top: 0;
       margin-bottom: 0.5rem;
       padding-bottom: 0.25rem;
       border-bottom: 2px solid #7B68EE;
@@ -57,7 +80,7 @@
       border-radius: 25px;
       cursor: pointer;
       width: 100%;
-      margin-top: 1rem;
+      margin-top: 0.75rem;
       transition: background-color 0.3s ease;
     }
     .calculate-btn:hover {
@@ -67,11 +90,14 @@
       background-color: #ccc;
       cursor: not-allowed;
     }
+    .results-panel {
+      display: flex;
+      flex-direction: column;
+    }
     .results {
       background-color: white;
       border-radius: 8px;
       padding: 1.5rem;
-      margin-top: 1.5rem;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
       display: none;
     }
@@ -96,14 +122,14 @@
     }
     .travel-info {
       background-color: #f0f0f0;
-      padding: 0.75rem;
+      padding: 0.5rem 0.75rem;
       border-radius: 4px;
       margin-top: 0.5rem;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
     }
     .back-link {
       display: inline-block;
-      margin-bottom: 1rem;
+      margin-bottom: 0.5rem;
       color: #7B68EE;
       text-decoration: none;
     }
@@ -115,82 +141,124 @@
       background-color: #ffebee;
       padding: 0.75rem;
       border-radius: 4px;
-      margin-top: 1rem;
+      margin-top: 0.5rem;
       display: none;
     }
     .error-message.visible {
       display: block;
+    }
+
+    /* Desktop layout - 768px and up */
+    @media (min-width: 768px) {
+      .estimator-layout {
+        flex-direction: row;
+        align-items: flex-start;
+      }
+      .estimator-form {
+        flex: 3;
+        min-width: 0;
+      }
+      .results-panel {
+        flex: 2;
+        min-width: 280px;
+        position: sticky;
+        top: 1rem;
+      }
+      .form-columns {
+        flex-direction: row;
+        gap: 1.5rem;
+      }
+      .form-section {
+        min-width: 0;
+      }
+      .results {
+        margin-top: 0;
+      }
+      .results.visible {
+        display: block;
+      }
+    }
+
+    /* Larger desktop */
+    @media (min-width: 1024px) {
+      .container {
+        max-width: 1100px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <a href="../" class="back-link">&larr; Back to Home</a>
-    <h1>Carpet Cleaning Estimate</h1>
-    <p>Get an instant estimate for your carpet cleaning service</p>
+    <div class="page-header">
+      <h1>Carpet Cleaning Estimate</h1>
+      <p>Get an instant estimate for your carpet cleaning service</p>
+    </div>
 
-    <div class="estimator-form">
-      <div class="section-title">Customer Location</div>
+    <div class="estimator-layout">
+      <div class="estimator-form">
+        <div class="form-columns">
+          <div class="form-section">
+            <div class="section-title">Customer Location</div>
+            <div class="form-group">
+              <label for="customer-address">Customer Address</label>
+              <gmp-place-autocomplete id="customer-address" placeholder="Enter customer address" style="width: 100%; padding: 0.5rem; font-size: 1rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;"></gmp-place-autocomplete>
+            </div>
+            <div class="form-group">
+              <label for="square-footage">Home Square Footage</label>
+              <input type="number" id="square-footage" placeholder="e.g., 1500" min="0">
+            </div>
 
-      <div class="form-group">
-        <label for="customer-address">Customer Address</label>
-        <gmp-place-autocomplete id="customer-address" placeholder="Enter customer address" style="width: 100%; padding: 0.5rem; font-size: 1rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;"></gmp-place-autocomplete>
+            <div class="section-title">Travel Costs</div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="gas-price">Gas ($/gal)</label>
+                <input type="number" id="gas-price" value="3.00" step="0.01" min="0">
+              </div>
+              <div class="form-group">
+                <label for="van-mpg">Van MPG</label>
+                <input type="number" id="van-mpg" value="15" step="0.1" min="1">
+              </div>
+            </div>
+            <div id="travel-info" class="travel-info" style="display: none;">
+              <strong>Travel:</strong> <span id="travel-details"></span>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="section-title">Room Details</div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="num-rooms">Rooms</label>
+                <input type="number" id="num-rooms" value="0" min="0">
+              </div>
+              <div class="form-group">
+                <label for="num-stairs">Stairs</label>
+                <input type="number" id="num-stairs" value="0" min="0">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="num-hallways">Hallways/Entries</label>
+                <input type="number" id="num-hallways" value="0" min="0">
+              </div>
+              <div class="form-group">
+                <label for="num-dining">Dining/Dens</label>
+                <input type="number" id="num-dining" value="0" min="0">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button type="button" class="calculate-btn" id="calculate-btn">Calculate Estimate</button>
+        <div id="error-message" class="error-message"></div>
       </div>
 
-      <div class="form-group">
-        <label for="square-footage">Home Square Footage</label>
-        <input type="number" id="square-footage" placeholder="e.g., 1500" min="0">
-      </div>
-
-      <div class="section-title">Travel Costs</div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label for="gas-price">Gas Price ($/gallon)</label>
-          <input type="number" id="gas-price" value="3.00" step="0.01" min="0">
+      <div class="results-panel">
+        <div id="results" class="results">
+          <h3 style="margin-top: 0; text-align: center;">Estimate Breakdown</h3>
+          <div id="results-content"></div>
         </div>
-        <div class="form-group">
-          <label for="van-mpg">Van MPG</label>
-          <input type="number" id="van-mpg" value="15" step="0.1" min="1">
-        </div>
-      </div>
-
-      <div id="travel-info" class="travel-info" style="display: none;">
-        <strong>Travel Details:</strong>
-        <div id="travel-details"></div>
-      </div>
-
-      <div class="section-title">Room Details</div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label for="num-rooms">Number of Rooms</label>
-          <input type="number" id="num-rooms" value="0" min="0">
-        </div>
-        <div class="form-group">
-          <label for="num-stairs">Number of Stairs</label>
-          <input type="number" id="num-stairs" value="0" min="0">
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label for="num-hallways">Hallways/Entry Ways</label>
-          <input type="number" id="num-hallways" value="0" min="0">
-        </div>
-        <div class="form-group">
-          <label for="num-dining">Dining Rooms/Dens</label>
-          <input type="number" id="num-dining" value="0" min="0">
-        </div>
-      </div>
-
-      <button type="button" class="calculate-btn" id="calculate-btn">Calculate Estimate</button>
-
-      <div id="error-message" class="error-message"></div>
-
-      <div id="results" class="results">
-        <h3 style="margin-top: 0; text-align: center;">Estimate Breakdown</h3>
-        <div id="results-content"></div>
       </div>
     </div>
   </div>
