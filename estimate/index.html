@@ -213,23 +213,17 @@
 
     // Initialize Google Maps
     async function initAutocomplete() {
-      console.log('initAutocomplete called');
       try {
         await customElements.whenDefined('gmp-place-autocomplete');
-        console.log('gmp-place-autocomplete defined');
+        const placeAutocomplete = document.getElementById('customer-address');
 
-      const placeAutocomplete = document.getElementById('customer-address');
-      console.log('Autocomplete element found:', placeAutocomplete);
-
-      placeAutocomplete.addEventListener('gmp-select', async ({ placePrediction }) => {
-        console.log('Place selected event fired');
-        const place = placePrediction.toPlace();
-        await place.fetchFields({ fields: ['formattedAddress'] });
-        console.log('Formatted address:', place.formattedAddress);
-        if (place.formattedAddress) {
-          calculateTravelDistance(place.formattedAddress);
-        }
-      });
+        placeAutocomplete.addEventListener('gmp-select', async ({ placePrediction }) => {
+          const place = placePrediction.toPlace();
+          await place.fetchFields({ fields: ['formattedAddress'] });
+          if (place.formattedAddress) {
+            calculateTravelDistance(place.formattedAddress);
+          }
+        });
       } catch (e) {
         console.error('Error in initAutocomplete:', e);
       }
@@ -237,7 +231,6 @@
 
     // Calculate travel distance using Distance Matrix API
     function calculateTravelDistance(destination) {
-      console.log('Calculating distance to:', destination);
       const service = new google.maps.DistanceMatrixService();
 
       service.getDistanceMatrix({
@@ -246,7 +239,6 @@
         travelMode: google.maps.TravelMode.DRIVING,
         unitSystem: google.maps.UnitSystem.IMPERIAL
       }, function(response, status) {
-        console.log('Distance Matrix response:', status, response);
         if (status === 'OK' && response.rows[0].elements[0].status === 'OK') {
           const element = response.rows[0].elements[0];
           travelData = {
